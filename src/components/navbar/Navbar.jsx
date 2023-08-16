@@ -51,11 +51,9 @@ const Navbar = ({ machineTypes }) => {
               </NavItems>
             ))}
           <NavItems>
-            {machineTypes && machineTypes.length > 0 && (
-              <NavItems>
-                <NavLinks to="manage">Manage</NavLinks>
-              </NavItems>
-            )}
+            <NavItems>
+              <NavLinks to="manage">Manage</NavLinks>
+            </NavItems>
           </NavItems>
         </NavMenu>
         <NavBtnWrapper>

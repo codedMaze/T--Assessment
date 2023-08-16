@@ -53,6 +53,9 @@ const Sidebar = ({ machineTypes }) => {
                 {machine.name}
               </SidebarLink>
             ))}
+          <SidebarLink to="Manage" onClick={menuHandler}>
+            Manage
+          </SidebarLink>
         </SidebarMenu>
         <SideBtnWrap>
           <NavBtn onClick={showModalHandler}>Add Type</NavBtn>

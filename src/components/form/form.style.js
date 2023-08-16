@@ -3,6 +3,7 @@ import { FaTimes } from "react-icons/fa";
 
 export const Container = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 
 export const ManageContainer = styled.div`

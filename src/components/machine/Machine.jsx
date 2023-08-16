@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 
 const Machine = ({ machine, showCancle }) => {
   const dispatch = useDispatch();
-  const showEdit = useSelector((state) => state.ui.showEditForm);
+  const showEdit = useSelector((state) => state.ui.editForm);
   const machineTypes = useSelector((state) => state.machine.machineTypes);
 
   const filter = machineTypes.filter(
@@ -41,7 +41,7 @@ const Machine = ({ machine, showCancle }) => {
   };
 
   const clickHandler = () => {
-    dispatch(uiAction.toggleEditForm());
+    dispatch(uiAction.toggleEdit());
   };
 
   return (
@@ -79,7 +79,7 @@ const Machine = ({ machine, showCancle }) => {
 
       {showEdit && (
         <Modal>
-          <AddMachine machine={machine} edit={true} />
+          <AddMachine machine={machine} edit={true} newData={true} />
         </Modal>
       )}
     </>

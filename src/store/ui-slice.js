@@ -5,6 +5,7 @@ const initialState = {
   showModel: false,
   showMachineForm: false,
   showEditForm: false,
+  editForm: false,
 };
 
 const uiSlice = createSlice({
@@ -22,6 +23,14 @@ const uiSlice = createSlice({
     },
     toggleEditForm(state) {
       state.showEditForm = !state.showEditForm;
+    },
+    toggleEdit(state) {
+      state.editForm = !state.editForm;
+    },
+    setAllFalse(state) {
+      state.showEditForm = false;
+      state.showMachineForm = false;
+      state.editForm = false;
     },
   },
 });

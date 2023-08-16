@@ -12,16 +12,15 @@ import Button from "../../UI/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { machineAction } from "../../store/manchine-slice";
 import { toast } from "react-toastify";
+import { fetchData } from "../../store/helper";
 
-const AddMachine = ({ machine, edit }) => {
+const AddMachine = ({ machine, edit, newData }) => {
   const dispatch = useDispatch();
   const machines = useSelector((state) => state.machine.machines);
   const { name, id, options } = machine;
 
   const closeHandler = () => {
-    if (!edit) {
-      dispatch(uiAction.toggleMachineForm());
-    } else dispatch(uiAction.toggleEditForm());
+    dispatch(uiAction.setAllFalse());
   };
 
   const [fieldOption, setFieldOption] = useState([...options]);
@@ -53,10 +52,27 @@ const AddMachine = ({ machine, edit }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (edit) {
+    if (edit && newData) {
       console.log(id);
       const index = machines.findIndex((i) => i.id === id);
       console.log(index);
+      const machine = {
+        machineTypeId: id,
+        name,
+        options: [...fieldOption],
+      };
+
+      let existingMachines = [...machines];
+      let existing = existingMachines[index];
+      let update = { ...existing, options: [...machine.options] };
+      existingMachines[index] = update;
+      // console.log(existingMachines);
+      localStorage.setItem("machines", JSON.stringify([...existingMachines]));
+      dispatch(machineAction.loadMachines(existingMachines));
+      dispatch(uiAction.setAllFalse());
+      toast.success(`${machine.name} updated successfully`);
+      dispatch(uiAction.toggleEdit);
+      return;
     } else {
       const machine = {
         machineTypeId: id,
@@ -65,7 +81,7 @@ const AddMachine = ({ machine, edit }) => {
       };
       dispatch(machineAction.addMachine(machine));
       toast.success(`Machine added successfully`);
-      dispatch(uiAction.toggleMachineForm());
+      !edit && dispatch(uiAction.toggleMachineForm());
     }
     // console.log(machine);
   };

@@ -7,7 +7,8 @@ import { fetchData } from "../store/helper";
 // import
 
 const Wrapper = () => {
-  const machine = useLoaderData();
+  const machin = useLoaderData();
+  const machine = useSelector((state) => state.machine.machineTypes);
 
   return (
     <>

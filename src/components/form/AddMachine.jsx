@@ -11,11 +11,12 @@ import { uiAction } from "../../store/ui-slice";
 import Button from "../../UI/Button/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { machineAction } from "../../store/manchine-slice";
+import { toast } from "react-toastify";
 
 const AddMachine = ({ machine, edit }) => {
   const dispatch = useDispatch();
   const machines = useSelector((state) => state.machine.machines);
-  const { name, title, id, options } = machine;
+  const { name, id, options } = machine;
 
   const closeHandler = () => {
     if (!edit) {
@@ -60,10 +61,10 @@ const AddMachine = ({ machine, edit }) => {
       const machine = {
         machineTypeId: id,
         name,
-        title,
         options: [...fieldOption],
       };
       dispatch(machineAction.addMachine(machine));
+      toast.success(`Machine added successfully`);
       dispatch(uiAction.toggleMachineForm());
     }
     // console.log(machine);

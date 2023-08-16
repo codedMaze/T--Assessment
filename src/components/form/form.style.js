@@ -1,9 +1,26 @@
 import styled from "styled-components";
 import { FaTimes } from "react-icons/fa";
 
+export const Container = styled.div`
+  display: flex;
+`;
+
+export const ManageContainer = styled.div`
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 16px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: start;
+  align-items: start;
+  background-color: #fff;
+  gap: 1rem;
+`;
+
 export const FormContainer = styled.form`
   border: 2px solid #eee;
-  position: absolute;
+  position: relative;
   border-radius: 8px;
   display: block;
   max-width: 500px;

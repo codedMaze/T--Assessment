@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BodyParagraph,
   BodyTitle,
@@ -20,9 +20,14 @@ import { ButtonWrapper } from "../../UI/Button/button.style";
 import { uiAction } from "../../store/ui-slice";
 import { toast } from "react-toastify";
 
-const Machine = ({ machine, showCancle, id }) => {
+const Machine = ({ machine, showCancle }) => {
   const dispatch = useDispatch();
   const showEdit = useSelector((state) => state.ui.showEditForm);
+  const machineTypes = useSelector((state) => state.machine.machineTypes);
+
+  const filter = machineTypes.filter(
+    (item) => item.id === machine.machineTypeId
+  );
 
   const deleteHandler = () => {
     const confirm = window.confirm("Are you sure you want to delete");
@@ -49,7 +54,12 @@ const Machine = ({ machine, showCancle, id }) => {
             </Icon>
           )}
           <MachineTitle>
-            <MachineSpan>{machine.name}</MachineSpan> - {machine.title}
+            <MachineSpan>{machine.name}</MachineSpan> -{" "}
+            {machine.options
+              .filter((item) => item.name === filter[0].title)
+              .map((item) => (
+                <>{item.inputValue}</>
+              ))}
           </MachineTitle>
         </MachineTitleWrapper>
         <MachineBody>
@@ -69,7 +79,7 @@ const Machine = ({ machine, showCancle, id }) => {
 
       {showEdit && (
         <Modal>
-          <AddMachine machine={machine} edit={true} editId={id} />
+          <AddMachine machine={machine} edit={true} />
         </Modal>
       )}
     </>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -18,19 +18,43 @@ import Button from "../../UI/Button/Button";
 import { uiAction } from "../../store/ui-slice";
 import { machineAction } from "../../store/manchine-slice";
 import { toast } from "react-toastify";
+import { deleteItem, getAllMatchingItems } from "../../store/helper";
 
-const Form = () => {
+const Form = ({ machines, index }) => {
   const dispatch = useDispatch();
   const machine = useSelector((state) => state.machine.machineTypes);
+  const mac = useSelector((state) => state.machine.machines);
 
-  const machines = false;
   const objectTypeRef = useRef();
 
   const [options, setOptions] = useState([{ name: "Title", value: "text" }]);
   const [objTitle, setObjTitle] = useState(options[0].name);
 
+  useEffect(() => {
+    if (machines) {
+      setOptions([...machines.options]);
+      setObjTitle(machines.title);
+    }
+  }, [machines]);
+
   const closeHandler = () => {
-    dispatch(uiAction.toggleModelForm());
+    if (machines) {
+      const assure = window.confirm(
+        "Are you sure you want to delete this machine"
+      );
+      if (assure) {
+        const newItem = deleteItem({ key: "machineTypes", id: machines.id });
+
+        const machineItems = mac.filter(
+          (element) => element.machineTypeId !== machines.id
+        );
+        dispatch(machineAction.loadMachineTypes(newItem));
+        dispatch(machineAction.loadMachines(machineItems));
+        localStorage.setItem("machineTypes", JSON.stringify([...newItem]));
+        localStorage.setItem("machines", JSON.stringify([...machineItems]));
+        toast.success(`${machines.name} deleted successfully`);
+      }
+    } else dispatch(uiAction.toggleModelForm());
   };
 
   const selectChangeHandler = (e) => {
@@ -73,9 +97,27 @@ const Form = () => {
 
     const items = {
       machineName: objectTypeRef.current.value,
-      machineTitle: objTitle,
+      title: objTitle,
       others: options,
+      index: +index,
     };
+
+    if (machines) {
+      let updated = [...machine];
+      let existing = updated[items.index];
+      const updateExisting = {
+        ...existing,
+        machineName: items.machineName,
+        title: items.title,
+        options: items.others,
+      };
+      updated[items.index] = updateExisting;
+      console.log(updated);
+      dispatch(machineAction.loadMachineTypes(updated));
+      localStorage.setItem("machineTypes", JSON.stringify([...updated]));
+      toast.success(`${items.machineName} updated successfully`);
+      return;
+    }
 
     if (machine.length > 0) {
       for (let i = 0; i < machine.length; i++) {
@@ -97,10 +139,14 @@ const Form = () => {
 
   return (
     <FormContainer onSubmit={submitHandler}>
+      {/* header name */}
+      {machines && <input type="hidden" name="index" value={index} />}
       <IconWrapper>
         <CloseIcon onClick={closeHandler} />
       </IconWrapper>
-      <Title>Add Machine Type</Title>
+      <Title>{machines ? `${machines.name}` : `Add Machine Type`}</Title>
+
+      {/* header name */}
       <FieldContainer>
         <label htmlFor="objectType">Object Type</label>
         <InputField
@@ -112,6 +158,8 @@ const Form = () => {
           defaultValue={machines ? machines.name : ""}
         />
       </FieldContainer>
+
+      {/* Properties */}
 
       <FieldContainer>
         <label htmlFor="addProperties">Add Properties</label>
@@ -150,6 +198,9 @@ const Form = () => {
             </FlexBox>
           ))}
         </FieldList>
+
+        {/* add field */}
+
         <InputSelect
           // name="selectFieldOption"
           // id="selectFieldOption"
@@ -176,13 +227,16 @@ const Form = () => {
           )}
         </InputSelect>
       </FieldContainer>
+
+      {/* set Title */}
+
       <FieldContainer style={{ marginBottom: "20px" }}>
         <label htmlFor="objectTitle">Object Title</label>
         <InputSelect
           name="objectTitle"
           id="objectTitle"
           // defaultValue={options[0].value}
-          //   defaultValue={objTitle}
+          // defaultValue={objTitle}
           value={objTitle}
           required
           onChange={selectChangeHandler}
@@ -195,7 +249,7 @@ const Form = () => {
         </InputSelect>
       </FieldContainer>
 
-      <Button>Add Machine Type</Button>
+      <Button>{machines ? `Edit ${machines.name}` : `Add Machine Type`}</Button>
     </FormContainer>
   );
 };

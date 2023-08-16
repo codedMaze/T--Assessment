@@ -13,7 +13,7 @@ const machineSlice = createSlice({
       const items = {
         id: crypto.randomUUID(),
         name: action.payload.machineName,
-        title: action.payload.machineTitle,
+        title: action.payload.title,
         options: action.payload.others,
       };
       state.machineTypes = [...state.machineTypes, items];

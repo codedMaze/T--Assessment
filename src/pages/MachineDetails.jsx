@@ -4,7 +4,6 @@ import Machine from "../components/machine/Machine";
 import {
   Container,
   MachineContainer,
-  MachineWrapper,
 } from "../components/machine/machine.style";
 import { useSelector } from "react-redux";
 // import Mach
@@ -20,7 +19,7 @@ const MachineDetails = () => {
     <Container>
       <MachineContainer>
         {rest.map((item, index) => (
-          <Machine machine={item} key={index} id={item.id} showCancle={true} />
+          <Machine machine={item} key={index} showCancle={true} />
         ))}
       </MachineContainer>
     </Container>
